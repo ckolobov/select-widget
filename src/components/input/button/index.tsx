@@ -8,7 +8,8 @@ export enum ButtonType {
 
 interface ButtonProps {
   type?: ButtonType
-  label: string
+  label: React.ReactNode
+  onClick: React.MouseEventHandler<HTMLButtonElement>
 }
 
 const BUTTON_CLASS = 'button';
@@ -24,5 +25,5 @@ export function Button (props: ButtonProps) {
     return classes.join(' ');
   }, [props.type])
 
-  return <button className={className}>{props.label}</button>
+  return <button className={className} onClick={props.onClick}>{props.label}</button>
 }
