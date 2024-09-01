@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './index.css'
-import { Button } from '../../input/button';
+import { Button, ButtonType } from '../../input/button';
 
 interface SelectWidgetProps {
   selectionMaxAmount?: number;
@@ -14,7 +14,7 @@ export function SelectWidget(props: SelectWidgetProps) {
     <header>Select Items</header>
     <p>Max amount to select: {props.selectionMaxAmount}</p>
     <p>You currently have {selected.length} selected items</p>
-    <Button label='Change my choice' />
+    <Button label='Change my choice' type={ButtonType.Success} />
   </div>
   )
 }

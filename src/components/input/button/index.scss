@@ -1,0 +1,26 @@
+.button {
+  padding: 5px 20px;
+  border: none;
+  font-size: 14px;
+  color: #ffffff;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &--success {
+    background-color: #519f03;
+
+    &:hover {
+      background-color: #61af13;
+    }
+  }
+
+  &--error {
+    background-color: #9f2903;
+
+    &:hover {
+      background-color: #af3913;
+    }
+  }
+}
