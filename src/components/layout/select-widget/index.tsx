@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './index.scss'
 import { Button, ButtonType } from '../../input/button';
 import { SelectDialog } from './select-dialog'
-import { elementsApi, Element } from '../../../api'
+import { Element } from '../../../api'
 
 interface SelectWidgetProps {
   selectionMaxAmount?: number;
 }
 
 export function SelectWidget(props: SelectWidgetProps) {
-  const [selected, setSelected] = useState<Element['id'][]>([])
+  const [selected, setSelected] = useState<Element[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -20,7 +20,8 @@ export function SelectWidget(props: SelectWidgetProps) {
     setIsModalOpen(false);
   };
 
-  const handleSaveSelected = (selected: Element['id'][]) => {
+  const handleSaveSelected = (selected: Element[]) => {
+    setIsModalOpen(false);
     setSelected([...selected]);
   }
 

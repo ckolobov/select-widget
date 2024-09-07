@@ -1,17 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './index.scss'
 import { Button, ButtonType } from '../../../input/button';
+import { Multiselect } from '../../../input/multiselect';
 import { Modal } from '../../modal'
 import { elementsApi, Element } from '../../../../api'
 
 interface SelectDialogProps {
   selectionMaxAmount?: number;
   onClose: () => void;
-  onSave: (selected: string[]) => void;
+  onSave: (selected: Element[]) => void;
 }
 
 export function SelectDialog(props: SelectDialogProps) {
-  const [selected, setSelected] = useState<Element['id'][]>([])
+  const [selected, setSelected] = useState<Record<Element['id'], Element>>({})
   const [elements, setElements] = useState<Element[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -29,8 +30,28 @@ export function SelectDialog(props: SelectDialogProps) {
   };
 
   const handleSave = () => {
-    props.onSave(selected);
+    props.onSave(Object.values(selected));
   };
+
+  const handleChange = useCallback((id: Element['id']) => {
+    setSelected((oldValue) => {
+      if (oldValue.hasOwnProperty(id)) {
+        const newValue = Object.fromEntries(
+          Object.entries(oldValue).filter(([key]) => key !== id)
+        );
+        return newValue
+      }
+      const addedElement = elements.find((element) => element.id === id)
+      if (
+        !addedElement ||
+        (props.selectionMaxAmount && Object.keys(oldValue).length >= props.selectionMaxAmount)
+      ) {
+        return oldValue;
+      }
+
+      return { ...oldValue, [id]: addedElement}
+    })
+  }, [setSelected, props.selectionMaxAmount, elements]);
 
   return (
     <Modal
@@ -46,11 +67,7 @@ export function SelectDialog(props: SelectDialogProps) {
       {
         isLoading ?
         <div>Loading...</div> :
-        <ul>
-          {elements.map((element) => {
-            return <li key={element.id}>{element.name}</li>
-          })}
-        </ul>
+        <Multiselect items={elements} selected={selected} onChange={handleChange} />
       }
     </Modal>
   )
