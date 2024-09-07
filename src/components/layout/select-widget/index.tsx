@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './index.scss'
 import { Button, ButtonType } from '../../input/button';
 import { Modal } from '../modal'
+import { elementsApi, Element } from '../../../api'
 
 interface SelectWidgetProps {
   selectionMaxAmount?: number;
@@ -11,11 +12,25 @@ export function SelectWidget(props: SelectWidgetProps) {
   const [selected] = useState<number[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [elements, setElements] = useState<Element[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      setIsLoading(true);
+      elementsApi.getElements()
+        .then(data => {
+          setElements(data);
+          setIsLoading(false);
+        });
+    }
+  }, [isModalOpen]);
+
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
 
-const handleCloseModal = () => {
+  const handleCloseModal = () => {
     setIsModalOpen(false);
   };
 
@@ -27,10 +42,15 @@ const handleCloseModal = () => {
     <Button label='Change my choice' type={ButtonType.Success} onClick={handleOpenModal} />
     {isModalOpen && (
       <Modal onClose={handleCloseModal} label='Select Items' footer={<button onClick={handleCloseModal}>Close</button>}>
-        <ul>
-          <li>Item 1</li>
-          <li>Item 2</li>
-        </ul>
+        {
+          isLoading ?
+          <div>Loading...</div> :
+          <ul>
+            {elements.map((element) => {
+              return <li key={element.id}>{element.name}</li>
+            })}
+          </ul>
+        }
       </Modal>
     )}
   </div>
