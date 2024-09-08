@@ -3,14 +3,15 @@ import { ReactNode } from 'react'
 import { MultiselectItem } from './multiselect-item'
 
 interface MultiselectItemProps {
-  id: string
-  label: ReactNode
+  id: string;
+  label: ReactNode;
 }
 
 interface MultiselectProps {
-  items: MultiselectItemProps[]
-  selected: Record<MultiselectItemProps['id'], any>
-  onChange: (itemId: string) => void
+  items: MultiselectItemProps[];
+  selected: Record<MultiselectItemProps['id'], any>;
+  disabled?: boolean;
+  onChange: (itemId: string) => void;
 }
 
 export function Multiselect(props: MultiselectProps) {
@@ -18,7 +19,16 @@ export function Multiselect(props: MultiselectProps) {
     <ul className='multiselect-list'>
       {props.items.map((item) => {
         const selected = props.selected.hasOwnProperty(item.id);
-        return <MultiselectItem key={item.id} id={item.id} label={item.label} selected={selected} onChange={props.onChange} />
+        return (
+          <MultiselectItem
+            key={item.id}
+            id={item.id}
+            label={item.label}
+            selected={selected}
+            onChange={props.onChange}
+            disabled={props.disabled}
+          />
+        )
       })}
     </ul>
   )

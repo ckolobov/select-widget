@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import './index.scss'
 import { Button, ButtonType } from '../../../input/button';
 import { Multiselect } from '../../../input/multiselect';
@@ -110,6 +110,13 @@ export function SelectDialog(props: SelectDialogProps) {
     }
   ]
 
+  const multiselectDisabled = useMemo(() => {
+    if (!props.selectionMaxAmount) {
+      return false;
+    }
+    return Object.keys(selected).length >= props.selectionMaxAmount
+  }, [props.selectionMaxAmount, selected])
+
   return (
     <Modal
       onClose={handleCloseModal}
@@ -130,7 +137,12 @@ export function SelectDialog(props: SelectDialogProps) {
           {
             isLoading ?
             <div>Loading...</div> :
-            <Multiselect items={filteredItems} selected={selected} onChange={handleChange} />
+            <Multiselect
+              items={filteredItems}
+              selected={selected}
+              onChange={handleChange}
+              disabled={multiselectDisabled}
+            />
           }
         </div>
         <div className='element-list-container'>
