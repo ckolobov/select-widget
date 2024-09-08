@@ -1,0 +1,25 @@
+.select-dialog-body-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  padding: 20px 0;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.filters-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.multiselect-container {
+  min-height: 250px;
+}

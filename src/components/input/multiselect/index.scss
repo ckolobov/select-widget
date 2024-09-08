@@ -1,0 +1,13 @@
+.multiselect-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  margin: 0;
+  padding: 0;
+  max-height: 250px;
+  overflow: auto;
+
+  background: #141414;
+  list-style: none;
+}

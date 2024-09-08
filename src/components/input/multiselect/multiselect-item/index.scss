@@ -1,0 +1,14 @@
+.multiselect-item {
+  padding: 8px 20px;
+  cursor: pointer;
+
+  &--disabled {
+    background-color: #555555;
+    color: #dddddd;
+    cursor: default;
+  }
+
+  &--selected {
+    background-color: #339751;
+  }
+}
