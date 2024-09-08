@@ -8,6 +8,7 @@ import { elementsApi, Element } from '../../../../api'
 import { useElementFilters } from './useElementFilters';
 import { Select } from '../../../input/select';
 import { SelectBoxValues } from './useElementFilters';
+import { ElementList } from '../../../display/element-list';
 
 interface SelectDialogProps {
   selected?: Element[];
@@ -67,6 +68,19 @@ export function SelectDialog(props: SelectDialogProps) {
     })
   }, [setSelected, props.selectionMaxAmount, elements]);
 
+  const handleCloseElement = useCallback((id: Element['id']) => {
+    setSelected((oldValue) => {
+      if (oldValue.hasOwnProperty(id)) {
+        const newValue = Object.fromEntries(
+          Object.entries(oldValue).filter(([key]) => key !== id)
+        );
+        return newValue
+      }
+
+      return oldValue
+    })
+  }, [setSelected]);
+
   const handleSearchChange = useCallback((searchValue: string) => {
     setSearch(searchValue);
   }, [setSearch])
@@ -107,15 +121,22 @@ export function SelectDialog(props: SelectDialogProps) {
         </div>
       }
     >
-      <div className='filters-container'>
-        <Search label="Search" value={search} onChange={handleSearchChange} />
-        <Select label="Filter" options={selectBoxOptions} value={filter} onChange={handleFilterChange} />
+      <div className='select-dialog-body-container'>
+        <div className='filters-container'>
+          <Search label="Search" value={search} onChange={handleSearchChange} />
+          <Select label="Filter" options={selectBoxOptions} value={filter} onChange={handleFilterChange} />
+        </div>
+        <div className='multiselect-container'>
+          {
+            isLoading ?
+            <div>Loading...</div> :
+            <Multiselect items={filteredItems} selected={selected} onChange={handleChange} />
+          }
+        </div>
+        <div className='element-list-container'>
+          <ElementList items={Object.values(selected)} onItemClose={handleCloseElement} />
+        </div>
       </div>
-      {
-        isLoading ?
-        <div>Loading...</div> :
-        <Multiselect items={filteredItems} selected={selected} onChange={handleChange} />
-      }
     </Modal>
   )
 }
