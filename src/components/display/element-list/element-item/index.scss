@@ -1,0 +1,20 @@
+.element-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 140px;
+
+  background: #121212;
+
+  &__label {
+    padding: 7px 10px;
+
+    overflow: hidden;
+
+    color: #ffffff;
+    font-size: 14px;
+    text-wrap: nowrap;
+    text-overflow: ellipsis;
+  }
+}

@@ -15,7 +15,7 @@ interface MultiselectProps {
 
 export function Multiselect(props: MultiselectProps) {
   return (
-    <ul className='list'>
+    <ul className='multiselect-list'>
       {props.items.map((item) => {
         const selected = props.selected.hasOwnProperty(item.id);
         return <MultiselectItem key={item.id} id={item.id} label={item.label} selected={selected} onChange={props.onChange} />

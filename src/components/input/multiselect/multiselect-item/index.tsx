@@ -26,5 +26,5 @@ export const MultiselectItem = memo(function MultiselectItem(props: MultiselectI
     return classes.join(' ');
   }, [selected])
 
-  return (<li key={id} onClick={handleClick} className={className}>{label}</li>);
+  return (<li onClick={handleClick} className={className}>{label}</li>);
 });
