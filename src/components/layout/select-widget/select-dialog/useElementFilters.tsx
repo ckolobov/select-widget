@@ -17,8 +17,15 @@ export function useElementFilters(elements: Element[], search: string, filter: S
       if (!search && (!filter || filter === SelectBoxValues.Empty)) {
         return elements;
       }
+
       return elements.filter((element) => {
-        return element.label.toLowerCase().includes(search) && element.value > Number(filter)
+        if (search && !element.label.toLowerCase().includes(search)) {
+          return false;
+        }
+        if (filter && filter !== SelectBoxValues.Empty && element.value < Number(filter)) {
+          return false;
+        }
+        return true;
       })
     })
   }, 100), [elements, setFilteredElements])
