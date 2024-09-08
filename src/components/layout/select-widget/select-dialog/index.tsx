@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './index.scss'
 import { Button, ButtonType } from '../../../input/button';
 import { Multiselect } from '../../../input/multiselect';
 import { Modal } from '../../modal'
 import { Search } from '../../../input/search';
 import { elementsApi, Element } from '../../../../api'
+import { useElementFilters } from './useElementFilters';
+import { Select } from '../../../input/select';
+import { SelectBoxValues } from './useElementFilters';
 
 interface SelectDialogProps {
   selected?: Element[];
@@ -25,6 +28,7 @@ export function SelectDialog(props: SelectDialogProps) {
   const [elements, setElements] = useState<Element[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [search, setSearch] = useState<string>('');
+  const [filter, setFilter] = useState<SelectBoxValues>(SelectBoxValues.Empty)
 
   useEffect(() => {
     setIsLoading(true);
@@ -67,12 +71,30 @@ export function SelectDialog(props: SelectDialogProps) {
     setSearch(searchValue);
   }, [setSearch])
 
-  const filteredItems = useMemo(() => {
-    if (!search) {
-      return elements;
+  const handleFilterChange = useCallback((filterValue: SelectBoxValues) => {
+    setFilter(filterValue);
+  }, [setFilter])
+
+  const filteredItems = useElementFilters(elements, search, filter)
+
+  const selectBoxOptions: {value: SelectBoxValues, label: string}[] = [
+    {
+      value: SelectBoxValues.Empty,
+      label: 'No filter',
+    },
+    {
+      value: SelectBoxValues.MoreThan10,
+      label: '>10',
+    },
+    {
+      value: SelectBoxValues.MoreThan50,
+      label: '>50',
+    },
+    {
+      value: SelectBoxValues.MoreThan100,
+      label: '>100',
     }
-    return elements.filter((element) => element.label.toLowerCase().includes(search))
-  }, [search, elements])
+  ]
 
   return (
     <Modal
@@ -85,8 +107,9 @@ export function SelectDialog(props: SelectDialogProps) {
         </div>
       }
     >
-      <div>
+      <div className='filters-container'>
         <Search label="Search" value={search} onChange={handleSearchChange} />
+        <Select label="Filter" options={selectBoxOptions} value={filter} onChange={handleFilterChange} />
       </div>
       {
         isLoading ?

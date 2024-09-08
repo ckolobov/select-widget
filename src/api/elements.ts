@@ -1,6 +1,7 @@
 export interface Element {
   id: string
   label: string
+  value: number
 }
 
 class ElementsApi {
@@ -11,7 +12,8 @@ class ElementsApi {
         for (let i = 1; i <= 300; i++) {
           const element = {
             id: String(i),
-            label: `Element ${i}`
+            label: `Element ${i}`,
+            value: i,
           }
           elements.push(element)
         }
