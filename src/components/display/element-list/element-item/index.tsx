@@ -1,6 +1,7 @@
 import './index.scss'
 import { useCallback, memo } from 'react'
 import { Element } from '../../../../api'
+import { IconButton } from '../../../input/icon-button'
 
 interface ElementItemProps {
   element: Element;
@@ -17,7 +18,7 @@ export const ElementItem = memo(function ElementItem(props: ElementItemProps) {
     <li className={'element-item'}>
       <div className={'element-item__label'}>{element.label}</div>
       <div>
-        <button onClick={handleClick}>Close</button>
+        <IconButton onClick={handleClick} icon={'X'} />
       </div>
     </li>
   );

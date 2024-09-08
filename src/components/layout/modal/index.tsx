@@ -1,6 +1,7 @@
-import ReactDOM from 'react-dom';
-import { PropsWithChildren } from 'react';
 import './index.scss'
+import ReactDOM from 'react-dom';
+import { PropsWithChildren, useCallback } from 'react';
+import { IconButton } from '../../input/icon-button';
 
 export const MODAL_ROOT_ID = 'modal-root'
 
@@ -11,17 +12,21 @@ interface ModalProps {
 }
 
 export function Modal(props: PropsWithChildren<ModalProps>) {
+  const { label, onClose, footer, children } = props;
   const modalRoot = document.getElementById(MODAL_ROOT_ID) || document.body;
+  const handleClose = useCallback(() => {
+    onClose()
+  }, [onClose])
   return ReactDOM.createPortal(
     <>
-      <div className='dark-background' onClick={() => props.onClose()} />
+      <div className='dark-background' onClick={handleClose} />
       <div className="modal">
         <div className="modal__header">
-          <h2 className='modal__label'>{props.label}</h2>
-          <button onClick={() => props.onClose()}>Close</button>
+          <h2 className='modal__label'>{label}</h2>
+          <IconButton onClick={handleClose} icon={'X'} />
         </div>
-        {props.children}
-        {props.footer && (<div className="modal__footer">{props.footer}</div>)}
+        {children}
+        {footer && (<div className="modal__footer">{footer}</div>)}
       </div>
     </>,
     modalRoot
