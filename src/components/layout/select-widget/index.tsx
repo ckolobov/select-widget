@@ -40,7 +40,14 @@ export function SelectWidget(props: SelectWidgetProps) {
     <p>You currently have {selectedElements.length} selected items.</p>
     <ElementList items={selectedElements} onItemClose={handleCloseElement} />
     <Button label='Change my choice' type={ButtonType.Success} onClick={handleOpenModal} />
-    {isModalOpen && <SelectDialog selectionMaxAmount={props.selectionMaxAmount} onClose={handleCloseModal} onSave={handleSaveSelected} />}
+    {isModalOpen &&
+      <SelectDialog
+        selected={selectedElements}
+        selectionMaxAmount={props.selectionMaxAmount}
+        onClose={handleCloseModal}
+        onSave={handleSaveSelected}
+      />
+    }
   </div>
   )
 }

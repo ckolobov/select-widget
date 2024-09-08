@@ -1,20 +1,30 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import './index.scss'
 import { Button, ButtonType } from '../../../input/button';
 import { Multiselect } from '../../../input/multiselect';
 import { Modal } from '../../modal'
+import { Search } from '../../../input/search';
 import { elementsApi, Element } from '../../../../api'
 
 interface SelectDialogProps {
+  selected?: Element[];
   selectionMaxAmount?: number;
   onClose: () => void;
   onSave: (selected: Element[]) => void;
 }
 
 export function SelectDialog(props: SelectDialogProps) {
-  const [selected, setSelected] = useState<Record<Element['id'], Element>>({})
+  const [selected, setSelected] = useState<Record<Element['id'], Element>>(
+    props.selected ?
+      props.selected.reduce<Record<Element['id'], Element>>((acc, element) => {
+        acc[element.id] = element;
+        return acc;
+      }, {}) :
+      {}
+  )
   const [elements, setElements] = useState<Element[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
     setIsLoading(true);
@@ -53,6 +63,17 @@ export function SelectDialog(props: SelectDialogProps) {
     })
   }, [setSelected, props.selectionMaxAmount, elements]);
 
+  const handleSearchChange = useCallback((searchValue: string) => {
+    setSearch(searchValue);
+  }, [setSearch])
+
+  const filteredItems = useMemo(() => {
+    if (!search) {
+      return elements;
+    }
+    return elements.filter((element) => element.label.toLowerCase().includes(search))
+  }, [search, elements])
+
   return (
     <Modal
       onClose={handleCloseModal}
@@ -64,10 +85,13 @@ export function SelectDialog(props: SelectDialogProps) {
         </div>
       }
     >
+      <div>
+        <Search label="Search" value={search} onChange={handleSearchChange} />
+      </div>
       {
         isLoading ?
         <div>Loading...</div> :
-        <Multiselect items={elements} selected={selected} onChange={handleChange} />
+        <Multiselect items={filteredItems} selected={selected} onChange={handleChange} />
       }
     </Modal>
   )
